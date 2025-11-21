@@ -117,15 +117,21 @@
                     return;
                 }
 
-                // 토큰 생성 (실제로는 서버에서 받아야 하지만, 여기서는 간단하게 생성)
+               // 토큰 생성 (실제로는 서버에서 받아야 하지만, 여기서는 간단하게 생성)
                 const token = 'token_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                
+
                 // localStorage에 토큰 저장
                 localStorage.setItem('authToken', token);
-                
+
+                // ✅ (추가) 로그인한 사용자 전화번호를 Android에 저장
+                //    웹(PC브라우저)에서 열 때는 AndroidBridge가 없으니 안전하게 체크
+                if (window.AndroidBridge && typeof AndroidBridge.saveUserPhone === "function") {
+                    AndroidBridge.saveUserPhone(phone);
+                }
+
                 // 로그인 후 처음 진입임을 표시하는 플래그 설정
                 sessionStorage.setItem('fromLogin', 'true');
-                
+
                 // main.html로 이동
                 window.location.href = 'main.html';
             });
